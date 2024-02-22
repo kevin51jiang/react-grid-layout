@@ -194,6 +194,12 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     return null;
   }
 
+  setLayoutState(newLayout: $ReadOnlyArray<LayoutItem>) {
+    const oldLayout = this.state.layout;
+    this.setState({ layout: newLayout });
+    this.onLayoutMaybeChanged(newLayout, oldLayout);
+  }
+
   shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
     return (
       // NOTE: this is almost always unequal. Therefore the only way to get better performance
