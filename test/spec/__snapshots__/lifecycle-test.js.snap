@@ -744,6 +744,7 @@ exports[`Lifecycle tests <ReactGridLayout> Basic Render 1`] = `
           },
         ]
       }
+      layoutCounter={0}
       margin={
         [
           10,
@@ -4826,6 +4827,7 @@ exports[`Lifecycle tests <ReactGridLayout> WidthProvider Renders with WidthProvi
           },
         ]
       }
+      layoutCounter={0}
       margin={
         [
           10,
@@ -8503,6 +8505,7 @@ exports[`Lifecycle tests <ReactGridLayout> data-grid Creates layout based on pro
   isDroppable={false}
   isResizable={true}
   layout={[]}
+  layoutCounter={0}
   margin={
     [
       10,
@@ -9093,6 +9096,7 @@ exports[`Lifecycle tests <ReactGridLayout> data-grid Null items in list 1`] = `
   isDroppable={false}
   isResizable={true}
   layout={[]}
+  layoutCounter={0}
   margin={
     [
       10,
@@ -11333,6 +11337,7 @@ exports[`Lifecycle tests <ResponsiveReactGridLayout> Basic Render 1`] = `
               },
             ]
           }
+          layoutCounter={0}
           margin={
             [
               10,

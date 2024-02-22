@@ -54,7 +54,7 @@ type State = {
   children: ReactChildrenArray<ReactElement<any>>,
   compactType?: CompactType,
   propsLayout?: Layout,
-  layoutCounter: number
+  layoutCounter?: number
 };
 
 import type { Props, DefaultProps } from "./ReactGridLayoutPropTypes";
@@ -117,7 +117,8 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     onResize: noop,
     onResizeStop: noop,
     onDrop: noop,
-    onDropDragOver: noop
+    onDropDragOver: noop,
+    layoutCounter: 0
   };
 
   state: State = {
@@ -162,8 +163,9 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     // Legacy support for compactType
     // Allow parent to set layout directly.
     if (
-      !deepEqual(nextProps.layout, prevState.propsLayout) ||
-      nextProps.compactType !== prevState.compactType
+      (!deepEqual(nextProps.layout, prevState.propsLayout) ||
+        nextProps.layoutCounter !== prevState.layoutCounter,
+      nextProps.compactType !== prevState.compactType)
     ) {
       newLayoutBase = nextProps.layout;
     } else if (!childrenEqual(nextProps.children, prevState.children)) {
@@ -175,6 +177,11 @@ export default class ReactGridLayout extends React.Component<Props, State> {
 
     // We need to regenerate the layout.
     if (newLayoutBase) {
+      console.log("newLayoutBase", newLayoutBase);
+      console.log("nextProps.children", nextProps.children);
+      console.log("nextProps.cols", nextProps.cols);
+      console.log("compactType(nextProps)", compactType(nextProps));
+      console.log("nextProps.allowOverlap", nextProps.allowOverlap);
       const newLayout = synchronizeLayoutWithChildren(
         newLayoutBase,
         nextProps.children,
@@ -196,18 +203,22 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     return null;
   }
 
-
   shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
-    return (
-      // NOTE: this is almost always unequal. Therefore the only way to get better performance
-      // from SCU is if the user intentionally memoizes children. If they do, and they can
-      // handle changes properly, performance will increase.
+    const shouldRerender =
       this.props.children !== nextProps.children ||
       !fastRGLPropsEqual(this.props, nextProps, deepEqual) ||
       this.state.activeDrag !== nextState.activeDrag ||
       this.state.mounted !== nextState.mounted ||
       this.state.droppingPosition !== nextState.droppingPosition ||
-      this.state.layoutCounter !== nextState.layoutCounter
+      this.props?.layoutCounter !== nextProps?.layoutCounter;
+
+    console.log("Should rerender grid", shouldRerender);
+
+    return (
+      // NOTE: this is almost always unequal. Therefore the only way to get better performance
+      // from SCU is if the user intentionally memoizes children. If they do, and they can
+      // handle changes properly, performance will increase.
+      shouldRerender
     );
   }
 
