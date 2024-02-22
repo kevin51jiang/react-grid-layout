@@ -53,7 +53,8 @@ type State = {
   // Mirrored props
   children: ReactChildrenArray<ReactElement<any>>,
   compactType?: CompactType,
-  propsLayout?: Layout
+  propsLayout?: Layout,
+  layoutCounter: number
 };
 
 import type { Props, DefaultProps } from "./ReactGridLayoutPropTypes";
@@ -135,7 +136,8 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     oldResizeItem: null,
     resizing: false,
     droppingDOMNode: null,
-    children: []
+    children: [],
+    layoutCounter: 0
   };
 
   dragEnterCounter: number = 0;
@@ -194,11 +196,6 @@ export default class ReactGridLayout extends React.Component<Props, State> {
     return null;
   }
 
-  setLayoutState(newLayout: $ReadOnlyArray<LayoutItem>) {
-    const oldLayout = this.state.layout;
-    this.setState({ layout: newLayout });
-    this.onLayoutMaybeChanged(newLayout, oldLayout);
-  }
 
   shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
     return (
@@ -209,7 +206,8 @@ export default class ReactGridLayout extends React.Component<Props, State> {
       !fastRGLPropsEqual(this.props, nextProps, deepEqual) ||
       this.state.activeDrag !== nextState.activeDrag ||
       this.state.mounted !== nextState.mounted ||
-      this.state.droppingPosition !== nextState.droppingPosition
+      this.state.droppingPosition !== nextState.droppingPosition ||
+      this.state.layoutCounter !== nextState.layoutCounter
     );
   }
 
